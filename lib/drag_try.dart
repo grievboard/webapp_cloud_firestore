@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:convert';
+//import 'dart:convert';
 //import 'package:firebase/firebase.dart' as fireBase;
-//import 'dart:developer';
+import 'dart:developer';
 
 
 class User {
@@ -86,7 +86,7 @@ class _DragTryState extends State<DragTry> {
   final List<User> completed = [];
   User acknowledgedData1;
   User acknowledgedData2;
-  var dragStatus;
+  String dragStatus, post;
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +188,7 @@ class _DragTryState extends State<DragTry> {
                   childWhenDragging: Container(),
                   onDragStarted: () {
                     acknowledgedData1 = notAcknowledged[index];
+                    post = acknowledgedData1.postId;
                     dragStatus = 'notAcknowledged';
                   },
                 );
@@ -294,10 +295,7 @@ class _DragTryState extends State<DragTry> {
               onAccept: (data) {
                 if (!acknowledged.contains(acknowledgedData1)) {
                   acknowledged.add(acknowledgedData1);
-                  var l = acknowledged.length;
-                  acknowledged[l-1].status = 'acknowledged';
                   notAcknowledged.remove(acknowledgedData1);
-                  setState(() {});
                   showDialog(
                     context: context,
                     child: AlertDialog(
@@ -308,17 +306,16 @@ class _DragTryState extends State<DragTry> {
                             controller: myController,
                           ),
                           TextField(
-                            decoration:
-                            InputDecoration(labelText: 'GPOC Number'),
+                            decoration: InputDecoration(labelText: 'GPOC Number'),
                             controller: myController1,
                           ),
                         ],
                       ),
                       actions: <Widget>[
                         RaisedButton(
-                          onPressed: () {
-                            acknowledgedData1.gpocName = myController.text;
-                            acknowledgedData1.gpocContact = myController1.text;
+                          onPressed: () async {
+                            await _fireStore.collection('ack').document(post).
+                            updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
                             Navigator.pop(context);
                           },
                           color: Colors.yellow,
