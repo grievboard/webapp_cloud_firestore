@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:webapp1/imp_functions/get_data_firestore.dart';
 //import 'dart:convert';
-//import 'package:firebase/firebase.dart' as fireBase;
-import 'dart:developer';
+//import 'dart:developer';
 
 
 class User {
@@ -37,25 +37,6 @@ class _DragTryState extends State<DragTry> {
     getAllCardData();
   }
 
-  Future addData() async{
-    await _fireStore.collection('ack').document('${acknowledgedData1.postId}').setData({
-      'status': 'acknowledged',
-      'username': '${acknowledgedData1.username}',
-      'location': '${acknowledgedData1.location}',
-      'description': '${acknowledgedData1.description}',
-      'postId': '${acknowledgedData1.postId}',
-      'name': '${acknowledgedData1.name}',
-      'ownerId': '${acknowledgedData1.ownerId}',
-      'mediaUrl': '${acknowledgedData1.mediaUrl}',
-      'isPrivate': '${acknowledgedData1.isPrivate}',
-      'consequences': acknowledgedData1.consequences,
-      'timestamp': '${acknowledgedData1.timestamp}',
-      'likes': acknowledgedData1.likes,
-    });
-    //_fireStore.collection('notAck').document('${acknowledgedData1.postId}').delete();
-    //_fireStore.collection('posts').document('${acknowledgedData1.ownerId}').collection('userPosts').document('${acknowledgedData1.postId}').updateData({'status':'acknowledged'});
-  }
-
   Future getAllCardData() async {
     var data = await _fireStore.collection('notAck').getDocuments();
     var data1 = data.documents;
@@ -86,7 +67,7 @@ class _DragTryState extends State<DragTry> {
   final List<User> completed = [];
   User acknowledgedData1;
   User acknowledgedData2;
-  String dragStatus, post;
+  String dragStatus, post, owner;
 
   @override
   Widget build(BuildContext context) {
@@ -189,6 +170,7 @@ class _DragTryState extends State<DragTry> {
                   onDragStarted: () {
                     acknowledgedData1 = notAcknowledged[index];
                     post = acknowledgedData1.postId;
+                    owner = acknowledgedData1.ownerId;
                     dragStatus = 'notAcknowledged';
                   },
                 );
@@ -314,8 +296,8 @@ class _DragTryState extends State<DragTry> {
                       actions: <Widget>[
                         RaisedButton(
                           onPressed: () async {
-                            await _fireStore.collection('ack').document(post).
-                            updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
+                            await _fireStore.collection('ack').document(post).updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
+                            await _fireStore.collection('posts').document(owner).collection('userPosts').document(post).updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
                             Navigator.pop(context);
                             myController1.clear();
                             myController.clear();
@@ -327,7 +309,8 @@ class _DragTryState extends State<DragTry> {
                     ),
                     barrierDismissible: false,
                   );
-                  addData();
+                  var getData = AddData(acknowledgedData1, 'ack', 'notAck', 'acknowledged');
+                  getData.addData();
                 }
               },
             ),
@@ -391,13 +374,8 @@ class _DragTryState extends State<DragTry> {
                   completed.add(acknowledgedData2);
                   acknowledged.remove(acknowledgedData2);
                 }
-                _fireStore.collection('completed').add({
-                  'description': acknowledgedData2.description,
-                  'location': acknowledgedData2.location,
-                  'username': acknowledgedData2.username,
-                });
-                setState(() {});
-                print("hello");
+                var getData = AddData(acknowledgedData2, 'completed', 'ack', 'completed');
+                getData.addData();
                 return null;
               },
             ),
