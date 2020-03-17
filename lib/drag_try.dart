@@ -296,9 +296,28 @@ class _DragTryState extends State<DragTry> {
                       actions: <Widget>[
                         RaisedButton(
                           onPressed: () async {
-                            await _fireStore.collection('ack').document(post).updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
-                            await _fireStore.collection('posts').document(owner).collection('userPosts').document(post).updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
+//                            await _fireStore.collection('ack').document(post).updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
+//                            await _fireStore.collection('posts').document(owner).collection('userPosts').document(post).updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
+                            _fireStore.collection('ack').document('${acknowledgedData1.postId}').setData({
+                              'status': 'acknowledged',
+                              'username': '${acknowledgedData1.username}',
+                              'location': '${acknowledgedData1.location}',
+                              'description': '${acknowledgedData1.description}',
+                              'postId': '${acknowledgedData1.postId}',
+                              'name': '${acknowledgedData1.name}',
+                              'ownerId': '${acknowledgedData1.ownerId}',
+                              'mediaUrl': '${acknowledgedData1.mediaUrl}',
+                              'isPrivate': acknowledgedData1.isPrivate,
+                              'consequences': acknowledgedData1.consequences,
+                              'timestamp': '${acknowledgedData1.timestamp}',
+                              'likes': acknowledgedData1.likes,
+                              'gpocname':myController.text,
+                              'gpoccontact':myController1.text
+                            });
+                            _fireStore.collection('notAck').document('${acknowledgedData1.postId}').delete();
+                            _fireStore.collection('posts').document('${acknowledgedData1.ownerId}').collection('userPosts').document('${acknowledgedData1.postId}').updateData({'status':'ack','gpocname':myController.text,'gpoccontact':myController1.text});
                             Navigator.pop(context);
+                            setState(() {});
                             myController1.clear();
                             myController.clear();
                           },
@@ -309,9 +328,6 @@ class _DragTryState extends State<DragTry> {
                     ),
                     barrierDismissible: false,
                   );
-                  var getData = AddData(acknowledgedData1, 'ack', 'notAck', 'ack');
-                  getData.addData();
-                  setState(() {});
                 }
               },
             ),
@@ -377,7 +393,7 @@ class _DragTryState extends State<DragTry> {
                 }
                 var getData = AddData(acknowledgedData2, 'completed', 'ack', 'done');
                 getData.addData();
-                setState(() {});
+                //setState(() {});
               },
             ),
           ),
