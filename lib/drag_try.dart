@@ -51,9 +51,9 @@ class _DragTryState extends State<DragTry> {
       'consequences': acknowledgedData1.consequences,
       'timestamp': '${acknowledgedData1.timestamp}',
       'likes': acknowledgedData1.likes,
-      'gpocname': '${acknowledgedData1.gpocName}',
-      'gpoccontact': '${acknowledgedData1.gpocContact}'
     });
+    _fireStore.collection('notAck').document('${acknowledgedData1.postId}').delete();
+    _fireStore.collection('posts').document('${acknowledgedData1.ownerId}').collection('userPosts').document('${acknowledgedData1.postId}').updateData({'status':'acknowledged'});
   }
 
   Future getAllCardData() async {
