@@ -42,7 +42,7 @@ class _DragTryState extends State<DragTry> {
     var data1 = data.documents;
     for(var x in data1){
       notAcknowledged.add(User(x['location'], x['description'], x['username'], x['postId'], x['name'], x['ownerId'], x['consequences'], x['isPrivate'],
-      x['mediaUrl'], x['status'], x['timestamp'].toString(), x['gpocname'], x['gpoccontact'], x['likes']));
+          x['mediaUrl'], x['status'], x['timestamp'].toString(), x['gpocname'], x['gpoccontact'], x['likes']));
     }
     data = await _fireStore.collection('ack').getDocuments();
     data1 = data.documents;
@@ -152,7 +152,7 @@ class _DragTryState extends State<DragTry> {
                       },
                       color: Colors.red,
                       child: ListTile(
-                        title: Text('${notAcknowledged[index].username}'),
+                        title: Text('${notAcknowledged[index].name}'),
                       ),
                     ),
                     padding: EdgeInsets.all(20.0),
@@ -253,7 +253,7 @@ class _DragTryState extends State<DragTry> {
                             );
                           },
                           child: ListTile(
-                            title: Text('${acknowledged[index].username}'),
+                            title: Text('${acknowledged[index].name}'),
                           ),
                         ),
                       ),
@@ -309,8 +309,9 @@ class _DragTryState extends State<DragTry> {
                     ),
                     barrierDismissible: false,
                   );
-                  var getData = AddData(acknowledgedData1, 'ack', 'notAck', 'acknowledged');
+                  var getData = AddData(acknowledgedData1, 'ack', 'notAck', 'ack');
                   getData.addData();
+                  setState(() {});
                 }
               },
             ),
@@ -367,16 +368,16 @@ class _DragTryState extends State<DragTry> {
                 );
               },
               onAccept: (data) {
-                if (dragStatus == 'notAcknowledged') {
+                if (dragStatus == 'notack') {
                   completed.add(acknowledgedData1);
                   notAcknowledged.remove(acknowledgedData1);
                 } else {
                   completed.add(acknowledgedData2);
                   acknowledged.remove(acknowledgedData2);
                 }
-                var getData = AddData(acknowledgedData2, 'completed', 'ack', 'completed');
+                var getData = AddData(acknowledgedData2, 'completed', 'ack', 'done');
                 getData.addData();
-                return null;
+                setState(() {});
               },
             ),
           ),

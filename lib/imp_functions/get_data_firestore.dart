@@ -17,13 +17,13 @@ class AddData{
       'name': '${contObject.name}',
       'ownerId': '${contObject.ownerId}',
       'mediaUrl': '${contObject.mediaUrl}',
-      'isPrivate': '${contObject.isPrivate}',
+      'isPrivate': contObject.isPrivate,
       'consequences': contObject.consequences,
       'timestamp': '${contObject.timestamp}',
       'likes': contObject.likes,
 //      'likes': acknowledgedData1.likes,
     });
-    //_fireStore.collection(previousCont).document('${contObject.postId}').delete();
-    //_fireStore.collection('posts').document('${contObject.ownerId}').collection('userPosts').document('${contObject.postId}').updateData({'status':status});
+    _fireStore.collection(previousCont).document('${contObject.postId}').delete();
+    _fireStore.collection('posts').document('${contObject.ownerId}').collection('userPosts').document('${contObject.postId}').updateData({'status':status});
   }
 }
