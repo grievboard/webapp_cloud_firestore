@@ -52,8 +52,8 @@ class _DragTryState extends State<DragTry> {
       'timestamp': '${acknowledgedData1.timestamp}',
       'likes': acknowledgedData1.likes,
     });
-    _fireStore.collection('notAck').document('${acknowledgedData1.postId}').delete();
-    _fireStore.collection('posts').document('${acknowledgedData1.ownerId}').collection('userPosts').document('${acknowledgedData1.postId}').updateData({'status':'acknowledged'});
+    //_fireStore.collection('notAck').document('${acknowledgedData1.postId}').delete();
+    //_fireStore.collection('posts').document('${acknowledgedData1.ownerId}').collection('userPosts').document('${acknowledgedData1.postId}').updateData({'status':'acknowledged'});
   }
 
   Future getAllCardData() async {
@@ -317,6 +317,8 @@ class _DragTryState extends State<DragTry> {
                             await _fireStore.collection('ack').document(post).
                             updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
                             Navigator.pop(context);
+                            myController1.clear();
+                            myController.clear();
                           },
                           color: Colors.yellow,
                           child: Text('close'),
