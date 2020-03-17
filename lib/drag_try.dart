@@ -5,7 +5,6 @@ import 'package:webapp1/imp_functions/get_data_firestore.dart';
 //import 'dart:convert';
 //import 'dart:developer';
 
-
 class User {
   final String location;
   final String description;
@@ -20,9 +19,22 @@ class User {
   final bool isPrivate;
   final List<dynamic> consequences;
   final String timestamp;
-  final Map<String,dynamic> likes;
-  User(this.location, this.description, this.username, this.postId, this.name, this.ownerId, this.consequences, this.isPrivate,
-      this.mediaUrl, this.status, this.timestamp, this.gpocName, this.gpocContact, this.likes);
+  final Map<String, dynamic> likes;
+  User(
+      this.location,
+      this.description,
+      this.username,
+      this.postId,
+      this.name,
+      this.ownerId,
+      this.consequences,
+      this.isPrivate,
+      this.mediaUrl,
+      this.status,
+      this.timestamp,
+      this.gpocName,
+      this.gpocContact,
+      this.likes);
 }
 
 class DragTry extends StatefulWidget {
@@ -40,21 +52,60 @@ class _DragTryState extends State<DragTry> {
   Future getAllCardData() async {
     var data = await _fireStore.collection('notAck').getDocuments();
     var data1 = data.documents;
-    for(var x in data1){
-      notAcknowledged.add(User(x['location'], x['description'], x['username'], x['postId'], x['name'], x['ownerId'], x['consequences'], x['isPrivate'],
-          x['mediaUrl'], x['status'], x['timestamp'].toString(), x['gpocname'], x['gpoccontact'], x['likes']));
+    for (var x in data1) {
+      notAcknowledged.add(User(
+          x['location'],
+          x['description'],
+          x['username'],
+          x['postId'],
+          x['name'],
+          x['ownerId'],
+          x['consequences'],
+          x['isPrivate'],
+          x['mediaUrl'],
+          x['status'],
+          x['timestamp'].toString(),
+          x['gpocname'],
+          x['gpoccontact'],
+          x['likes']));
     }
     data = await _fireStore.collection('ack').getDocuments();
     data1 = data.documents;
-    for(var x in data1){
-      acknowledged.add(User(x['location'], x['description'], x['username'], x['postId'], x['name'], x['ownerId'], x['consequences'], x['isPrivate'],
-          x['mediaUrl'], x['status'], x['timestamp'].toString(), x['gpocname'], x['gpoccontact'], x['likes']));
+    for (var x in data1) {
+      acknowledged.add(User(
+          x['location'],
+          x['description'],
+          x['username'],
+          x['postId'],
+          x['name'],
+          x['ownerId'],
+          x['consequences'],
+          x['isPrivate'],
+          x['mediaUrl'],
+          x['status'],
+          x['timestamp'].toString(),
+          x['gpocname'],
+          x['gpoccontact'],
+          x['likes']));
     }
     data = await _fireStore.collection('completed').getDocuments();
     data1 = data.documents;
-    for(var x in data1){
-      completed.add(User(x['location'], x['description'], x['username'], x['postId'], x['name'], x['ownerId'], x['consequences'], x['isPrivate'],
-          x['mediaUrl'], x['status'], x['timestamp'].toString(), x['gpocname'], x['gpoccontact'], x['likes']));
+    for (var x in data1) {
+      completed.add(User(
+          x['location'],
+          x['description'],
+          x['username'],
+          x['postId'],
+          x['name'],
+          x['ownerId'],
+          x['consequences'],
+          x['isPrivate'],
+          x['mediaUrl'],
+          x['status'],
+          x['timestamp'].toString(),
+          x['gpocname'],
+          x['gpoccontact'],
+          x['likes']));
     }
     setState(() {});
   }
@@ -288,7 +339,8 @@ class _DragTryState extends State<DragTry> {
                             controller: myController,
                           ),
                           TextField(
-                            decoration: InputDecoration(labelText: 'GPOC Number'),
+                            decoration:
+                                InputDecoration(labelText: 'GPOC Number'),
                             controller: myController1,
                           ),
                         ],
@@ -296,9 +348,10 @@ class _DragTryState extends State<DragTry> {
                       actions: <Widget>[
                         RaisedButton(
                           onPressed: () async {
-//                            await _fireStore.collection('ack').document(post).updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
-//                            await _fireStore.collection('posts').document(owner).collection('userPosts').document(post).updateData({'gpocname':myController.text,'gpoccontact':myController1.text});
-                            _fireStore.collection('ack').document('${acknowledgedData1.postId}').setData({
+                            _fireStore
+                                .collection('ack')
+                                .document('${acknowledgedData1.postId}')
+                                .setData({
                               'status': 'acknowledged',
                               'username': '${acknowledgedData1.username}',
                               'location': '${acknowledgedData1.location}',
@@ -311,11 +364,23 @@ class _DragTryState extends State<DragTry> {
                               'consequences': acknowledgedData1.consequences,
                               'timestamp': '${acknowledgedData1.timestamp}',
                               'likes': acknowledgedData1.likes,
-                              'gpocname':myController.text,
-                              'gpoccontact':myController1.text
+                              'gpocname': myController.text,
+                              'gpoccontact': myController1.text
                             });
-                            _fireStore.collection('notAck').document('${acknowledgedData1.postId}').delete();
-                            _fireStore.collection('posts').document('${acknowledgedData1.ownerId}').collection('userPosts').document('${acknowledgedData1.postId}').updateData({'status':'ack','gpocname':myController.text,'gpoccontact':myController1.text});
+                            _fireStore
+                                .collection('notAck')
+                                .document('${acknowledgedData1.postId}')
+                                .delete();
+                            _fireStore
+                                .collection('posts')
+                                .document('${acknowledgedData1.ownerId}')
+                                .collection('userPosts')
+                                .document('${acknowledgedData1.postId}')
+                                .updateData({
+                              'status': 'ack',
+                              'gpocname': myController.text,
+                              'gpoccontact': myController1.text
+                            });
                             Navigator.pop(context);
                             setState(() {});
                             myController1.clear();
@@ -375,7 +440,7 @@ class _DragTryState extends State<DragTry> {
                           }
                         },
                         child: ListTile(
-                          title: Text('${completed[index].username}'),
+                          title: Text('${completed[index]. name}'),
                         ),
                         padding: EdgeInsets.all(10.0),
                       ),
@@ -383,7 +448,7 @@ class _DragTryState extends State<DragTry> {
                   },
                 );
               },
-              onAccept: (data) {
+              onAccept: (data) async {
                 if (dragStatus == 'notack') {
                   completed.add(acknowledgedData1);
                   notAcknowledged.remove(acknowledgedData1);
@@ -391,9 +456,39 @@ class _DragTryState extends State<DragTry> {
                   completed.add(acknowledgedData2);
                   acknowledged.remove(acknowledgedData2);
                 }
-                var getData = AddData(acknowledgedData2, 'completed', 'ack', 'done');
-                getData.addData();
-                //setState(() {});
+                setState(() {});
+                _fireStore
+                    .collection('completed')
+                    .document('${acknowledgedData2.postId}')
+                    .setData({
+                  'status': 'done',
+                  'username': '${acknowledgedData2.username}',
+                  'location': '${acknowledgedData2.location}',
+                  'description': '${acknowledgedData2.description}',
+                  'postId': '${acknowledgedData2.postId}',
+                  'name': '${acknowledgedData2.name}',
+                  'ownerId': '${acknowledgedData2.ownerId}',
+                  'mediaUrl': '${acknowledgedData2.mediaUrl}',
+                  'isPrivate': acknowledgedData2.isPrivate,
+                  'consequences': acknowledgedData2.consequences,
+                  'timestamp': '${acknowledgedData2.timestamp}',
+                  'likes': acknowledgedData2.likes,
+                  'gpocname': '${acknowledgedData2.gpocName}',
+                  'gpoccontact': '${acknowledgedData2.gpocContact}'
+                });
+                _fireStore
+                    .collection('ack')
+                    .document('${acknowledgedData2.postId}')
+                    .delete();
+                _fireStore
+                    .collection('posts')
+                    .document('${acknowledgedData2.ownerId}')
+                    .collection('userPosts')
+                    .document('${acknowledgedData2.postId}')
+                    .updateData({
+                  'status': 'done',
+                });
+                setState(() {});
               },
             ),
           ),
