@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:webapp1/imp_functions/get_data_firestore.dart';
 //import 'dart:convert';
 //import 'dart:developer';
 
@@ -17,20 +16,20 @@ class _DragTryState extends State<DragTry> {
     getData();
   }
 
-  void getData() async{
+  void getData() async {
     var startData = await _fireStore.collection('notAck').getDocuments();
     var midData = startData.documents;
-    for(var x in midData){
+    for (var x in midData) {
       notAcknowledged.add(x.data);
     }
     startData = await _fireStore.collection('ack').getDocuments();
     midData = startData.documents;
-    for(var x in midData){
+    for (var x in midData) {
       acknowledged.add(x.data);
     }
     startData = await _fireStore.collection('completed').getDocuments();
     midData = startData.documents;
-    for(var x in midData){
+    for (var x in midData) {
       completed.add(x.data);
     }
     setState(() {});
@@ -58,7 +57,10 @@ class _DragTryState extends State<DragTry> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            color: Color(0xFF030423),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Color(0xFF030423),
+            ),
             margin: EdgeInsets.fromLTRB(70.0, 110.0, 70.0, 110.0),
             height: 500.0,
             width: 292.0,
@@ -74,9 +76,10 @@ class _DragTryState extends State<DragTry> {
                         showDialog(
                           context: context,
                           child: AlertDialog(
-                            title: Text('${notAcknowledged[index]['name']}'),
-                            content: Wrap(
-                              direction: Axis.vertical,
+                            title: Text(notAcknowledged[index]['name']),
+                            content: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 Card(
                                   color: Color(0xFFFBFBFB),
@@ -88,8 +91,16 @@ class _DragTryState extends State<DragTry> {
                                         SizedBox(
                                           height: 10.0,
                                         ),
-                                        Text(
-                                            '${notAcknowledged[index]['description']}'),
+                                        SingleChildScrollView(
+                                          child: Container(
+                                            //height: MediaQuery.of(context).size.height * 0.5,
+                                              width: MediaQuery.of(context).size.width * 0.5,
+                                              child: Text(
+                                                notAcknowledged[index]['description'],
+                                                maxLines: 10,
+                                              ),
+                                            ),
+                                        ),
                                       ],
                                     ),
                                     padding: EdgeInsets.all(5.0),
@@ -128,9 +139,16 @@ class _DragTryState extends State<DragTry> {
                           barrierDismissible: false,
                         );
                       },
-                      color: Colors.red,
-                      child: ListTile(
-                        title: Text('${notAcknowledged[index]['name']}'),
+                      color: Colors.white,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: ListTile(
+                          leading: Icon(Icons.fiber_manual_record,
+                              color: Colors.red),
+                          title: Text('${notAcknowledged[index]['name']}'),
+                        ),
                       ),
                     ),
                     padding: EdgeInsets.all(20.0),
@@ -155,8 +173,11 @@ class _DragTryState extends State<DragTry> {
             ),
           ),
           Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Color(0xFF030423),
+            ),
             margin: EdgeInsets.fromLTRB(70.0, 110.0, 70.0, 110.0),
-            color: Color(0xFF030423),
             width: 292.0,
             height: 500.0,
             child: DragTarget(
@@ -170,12 +191,13 @@ class _DragTryState extends State<DragTry> {
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
                         child: RaisedButton(
-                          color: Colors.orange,
+                          color: Colors.white,
                           onPressed: () {
                             showDialog(
                               context: context,
                               child: AlertDialog(
-                                title: Text('${acknowledged[index]['username']}'),
+                                title:
+                                    Text('${acknowledged[index]['username']}'),
                                 content: Wrap(
                                   direction: Axis.vertical,
                                   children: <Widget>[
@@ -189,7 +211,8 @@ class _DragTryState extends State<DragTry> {
                                             SizedBox(
                                               height: 10.0,
                                             ),
-                                            Text('${acknowledged[index]['description']}'),
+                                            Text(
+                                                '${acknowledged[index]['description']}'),
                                           ],
                                         ),
                                         padding: EdgeInsets.all(5.0),
@@ -230,6 +253,8 @@ class _DragTryState extends State<DragTry> {
                           },
                           child: ListTile(
                             title: Text('${acknowledged[index]['name']}'),
+                            leading: Icon(Icons.fiber_manual_record,
+                                color: Colors.deepOrangeAccent),
                           ),
                         ),
                       ),
@@ -266,7 +291,7 @@ class _DragTryState extends State<DragTry> {
                           ),
                           TextField(
                             decoration:
-                            InputDecoration(labelText: 'GPOC Number'),
+                                InputDecoration(labelText: 'GPOC Number'),
                             controller: myController1,
                           ),
                         ],
@@ -275,7 +300,8 @@ class _DragTryState extends State<DragTry> {
                         RaisedButton(
                           onPressed: () async {
                             acknowledgedData1['gpocname'] = myController.text;
-                            acknowledgedData1['gpoccontact'] = myController1.text;
+                            acknowledgedData1['gpoccontact'] =
+                                myController1.text;
                             acknowledgedData1['status'] = 'ack';
                             _fireStore
                                 .collection('ack')
@@ -290,7 +316,11 @@ class _DragTryState extends State<DragTry> {
                                 .document(acknowledgedData1['ownerId'])
                                 .collection('userPosts')
                                 .document(acknowledgedData1['postId'])
-                                .setData(acknowledgedData1);
+                                .updateData({
+                              'gpocname': acknowledgedData1['gpocname'],
+                              'gpoccontact': acknowledgedData1['gpoccontact'],
+                              'status': 'ack'
+                            });
                             myController1.clear();
                             myController.clear();
                             Navigator.pop(context);
@@ -309,10 +339,13 @@ class _DragTryState extends State<DragTry> {
             ),
           ),
           Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              color: Color(0xFF030423),
+            ),
             margin: EdgeInsets.fromLTRB(70.0, 110.0, 70.0, 110.0),
             width: 292.0,
             height: 500.0,
-            color: Color(0xff030423),
             child: DragTarget(
               builder: (context, candidateData, rejectedData) {
                 return ListView.builder(
@@ -320,40 +353,47 @@ class _DragTryState extends State<DragTry> {
                   itemCount: completed.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.all(10.0),
-                      child: RaisedButton(
-                        color: Color(0xFF67FD64),
-                        onPressed: () {
-                          {
-                            showDialog(
-                              context: context,
-                              child: AlertDialog(
-                                title: Text('${completed[index]['description']}'),
-                                content: Wrap(
-                                  direction: Axis.vertical,
-                                  children: <Widget>[
-                                    Text('${completed[index]['location']}'),
+                    return Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        margin: EdgeInsets.all(10.0),
+                        child: RaisedButton(
+                          color: Colors.white,
+                          onPressed: () {
+                            {
+                              showDialog(
+                                context: context,
+                                child: AlertDialog(
+                                  title: Text(
+                                      '${completed[index]['description']}'),
+                                  content: Wrap(
+                                    direction: Axis.vertical,
+                                    children: <Widget>[
+                                      Text('${completed[index]['location']}'),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    RaisedButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      color: Colors.yellow,
+                                      child: Text('Close'),
+                                    )
                                   ],
                                 ),
-                                actions: <Widget>[
-                                  RaisedButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    color: Colors.yellow,
-                                    child: Text('Close'),
-                                  )
-                                ],
-                              ),
-                              barrierDismissible: false,
-                            );
-                          }
-                        },
-                        child: ListTile(
-                          title: Text('${completed[index]['name']}'),
+                                barrierDismissible: false,
+                              );
+                            }
+                          },
+                          child: ListTile(
+                            title: Text('${completed[index]['name']}'),
+                            leading: Icon(
+                              Icons.fiber_manual_record,
+                              color: Colors.green,
+                            ),
+                          ),
                         ),
-                        padding: EdgeInsets.all(10.0),
                       ),
                     );
                   },
@@ -381,7 +421,7 @@ class _DragTryState extends State<DragTry> {
                     .document(acknowledgedData2['ownerId'])
                     .collection('userPosts')
                     .document(acknowledgedData2['postId'])
-                    .setData(acknowledgedData2);
+                    .updateData(acknowledgedData2);
                 setState(() {});
               },
             ),
@@ -391,3 +431,4 @@ class _DragTryState extends State<DragTry> {
     );
   }
 }
+
