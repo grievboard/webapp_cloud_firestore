@@ -93,7 +93,6 @@ class _DragTryState extends State<DragTry> {
                                         ),
                                         SingleChildScrollView(
                                           child: Container(
-                                            //height: MediaQuery.of(context).size.height * 0.5,
                                               width: MediaQuery.of(context).size.width * 0.5,
                                               child: Text(
                                                 notAcknowledged[index]['description'],
@@ -112,12 +111,12 @@ class _DragTryState extends State<DragTry> {
                                     child: Wrap(
                                       direction: Axis.vertical,
                                       children: <Widget>[
-                                        Text("Location"),
+                                        Text("Likes"),
                                         SizedBox(
                                           height: 10.0,
                                         ),
                                         Text(
-                                            '${notAcknowledged[index]['location']}'),
+                                            '${notAcknowledged[index]['likes'].length}'),
                                       ],
                                     ),
                                     padding: EdgeInsets.all(5.0),
