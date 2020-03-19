@@ -5,38 +5,6 @@ import 'package:webapp1/imp_functions/get_data_firestore.dart';
 //import 'dart:convert';
 //import 'dart:developer';
 
-class User {
-  final String location;
-  final String description;
-  final String username;
-  final String postId;
-  final String name;
-  final String ownerId;
-  final String mediaUrl;
-  var status;
-  String gpocName;
-  String gpocContact;
-  final bool isPrivate;
-  final List<dynamic> consequences;
-  final String timestamp;
-  final Map<String, dynamic> likes;
-  User(
-      this.location,
-      this.description,
-      this.username,
-      this.postId,
-      this.name,
-      this.ownerId,
-      this.consequences,
-      this.isPrivate,
-      this.mediaUrl,
-      this.status,
-      this.timestamp,
-      this.gpocName,
-      this.gpocContact,
-      this.likes);
-}
-
 class DragTry extends StatefulWidget {
   @override
   createState() => _DragTryState();
@@ -46,66 +14,24 @@ class _DragTryState extends State<DragTry> {
   @override
   void initState() {
     super.initState();
-    getAllCardData();
+    getData();
   }
 
-  Future getAllCardData() async {
-    var data = await _fireStore.collection('notAck').getDocuments();
-    var data1 = data.documents;
-    for (var x in data1) {
-      notAcknowledged.add(User(
-          x['location'],
-          x['description'],
-          x['username'],
-          x['postId'],
-          x['name'],
-          x['ownerId'],
-          x['consequences'],
-          x['isPrivate'],
-          x['mediaUrl'],
-          x['status'],
-          x['timestamp'].toString(),
-          x['gpocname'],
-          x['gpoccontact'],
-          x['likes']));
+  void getData() async{
+    var startData = await _fireStore.collection('notAck').getDocuments();
+    var midData = startData.documents;
+    for(var x in midData){
+      notAcknowledged.add(x.data);
     }
-    data = await _fireStore.collection('ack').getDocuments();
-    data1 = data.documents;
-    for (var x in data1) {
-      acknowledged.add(User(
-          x['location'],
-          x['description'],
-          x['username'],
-          x['postId'],
-          x['name'],
-          x['ownerId'],
-          x['consequences'],
-          x['isPrivate'],
-          x['mediaUrl'],
-          x['status'],
-          x['timestamp'].toString(),
-          x['gpocname'],
-          x['gpoccontact'],
-          x['likes']));
+    startData = await _fireStore.collection('ack').getDocuments();
+    midData = startData.documents;
+    for(var x in midData){
+      acknowledged.add(x.data);
     }
-    data = await _fireStore.collection('completed').getDocuments();
-    data1 = data.documents;
-    for (var x in data1) {
-      completed.add(User(
-          x['location'],
-          x['description'],
-          x['username'],
-          x['postId'],
-          x['name'],
-          x['ownerId'],
-          x['consequences'],
-          x['isPrivate'],
-          x['mediaUrl'],
-          x['status'],
-          x['timestamp'].toString(),
-          x['gpocname'],
-          x['gpoccontact'],
-          x['likes']));
+    startData = await _fireStore.collection('completed').getDocuments();
+    midData = startData.documents;
+    for(var x in midData){
+      completed.add(x.data);
     }
     setState(() {});
   }
@@ -114,11 +40,12 @@ class _DragTryState extends State<DragTry> {
   final myController1 = TextEditingController();
   var _fireStore = Firestore.instance;
   final List notAcknowledged = [];
-  final List<User> acknowledged = [];
-  final List<User> completed = [];
-  User acknowledgedData1;
-  User acknowledgedData2;
-  String dragStatus, post, owner;
+  final List acknowledged = [];
+  final List completed = [];
+  Map<String, dynamic> acknowledgedData1;
+  Map<String, dynamic> acknowledgedData2;
+  String dragStatus;
+  int ind, ind1;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +74,7 @@ class _DragTryState extends State<DragTry> {
                         showDialog(
                           context: context,
                           child: AlertDialog(
-                            title: Text('${notAcknowledged[index].username}'),
+                            title: Text('${notAcknowledged[index]['name']}'),
                             content: Wrap(
                               direction: Axis.vertical,
                               children: <Widget>[
@@ -162,7 +89,7 @@ class _DragTryState extends State<DragTry> {
                                           height: 10.0,
                                         ),
                                         Text(
-                                            '${notAcknowledged[index].description}'),
+                                            '${notAcknowledged[index]['description']}'),
                                       ],
                                     ),
                                     padding: EdgeInsets.all(5.0),
@@ -179,7 +106,7 @@ class _DragTryState extends State<DragTry> {
                                           height: 10.0,
                                         ),
                                         Text(
-                                            '${notAcknowledged[index].location}'),
+                                            '${notAcknowledged[index]['location']}'),
                                       ],
                                     ),
                                     padding: EdgeInsets.all(5.0),
@@ -203,7 +130,7 @@ class _DragTryState extends State<DragTry> {
                       },
                       color: Colors.red,
                       child: ListTile(
-                        title: Text('${notAcknowledged[index].name}'),
+                        title: Text('${notAcknowledged[index]['name']}'),
                       ),
                     ),
                     padding: EdgeInsets.all(20.0),
@@ -214,15 +141,14 @@ class _DragTryState extends State<DragTry> {
                       width: 284.0,
                       padding: const EdgeInsets.all(16.0),
                       color: Colors.yellow,
-                      child: Text(notAcknowledged[index].username),
+                      child: Text(notAcknowledged[index]['name']),
                     ),
                   ),
                   childWhenDragging: Container(),
                   onDragStarted: () {
                     acknowledgedData1 = notAcknowledged[index];
-                    post = acknowledgedData1.postId;
-                    owner = acknowledgedData1.ownerId;
                     dragStatus = 'notAcknowledged';
+                    ind = index;
                   },
                 );
               },
@@ -249,7 +175,7 @@ class _DragTryState extends State<DragTry> {
                             showDialog(
                               context: context,
                               child: AlertDialog(
-                                title: Text('${acknowledged[index].username}'),
+                                title: Text('${acknowledged[index]['username']}'),
                                 content: Wrap(
                                   direction: Axis.vertical,
                                   children: <Widget>[
@@ -263,8 +189,7 @@ class _DragTryState extends State<DragTry> {
                                             SizedBox(
                                               height: 10.0,
                                             ),
-                                            Text(
-                                                '${acknowledged[index].description}'),
+                                            Text('${acknowledged[index]['description']}'),
                                           ],
                                         ),
                                         padding: EdgeInsets.all(5.0),
@@ -281,7 +206,7 @@ class _DragTryState extends State<DragTry> {
                                               height: 10.0,
                                             ),
                                             Text(
-                                                '${acknowledged[index].location}'),
+                                                '${acknowledged[index]['location']}'),
                                           ],
                                         ),
                                         padding: EdgeInsets.all(5.0),
@@ -304,7 +229,7 @@ class _DragTryState extends State<DragTry> {
                             );
                           },
                           child: ListTile(
-                            title: Text('${acknowledged[index].name}'),
+                            title: Text('${acknowledged[index]['name']}'),
                           ),
                         ),
                       ),
@@ -314,12 +239,13 @@ class _DragTryState extends State<DragTry> {
                           width: 284.0,
                           padding: const EdgeInsets.all(16.0),
                           color: Colors.yellow,
-                          child: Text('${acknowledged[index].username}'),
+                          child: Text('${acknowledged[index]['username']}'),
                         ),
                       ),
                       onDragStarted: () {
                         acknowledgedData2 = acknowledged[index];
                         dragStatus = 'acknowledged';
+                        ind1 = index;
                       },
                     );
                   },
@@ -340,7 +266,7 @@ class _DragTryState extends State<DragTry> {
                           ),
                           TextField(
                             decoration:
-                                InputDecoration(labelText: 'GPOC Number'),
+                            InputDecoration(labelText: 'GPOC Number'),
                             controller: myController1,
                           ),
                         ],
@@ -348,43 +274,27 @@ class _DragTryState extends State<DragTry> {
                       actions: <Widget>[
                         RaisedButton(
                           onPressed: () async {
+                            acknowledgedData1['gpocname'] = myController.text;
+                            acknowledgedData1['gpoccontact'] = myController1.text;
+                            acknowledgedData1['status'] = 'ack';
                             _fireStore
                                 .collection('ack')
-                                .document('${acknowledgedData1.postId}')
-                                .setData({
-                              'status': 'acknowledged',
-                              'username': '${acknowledgedData1.username}',
-                              'location': '${acknowledgedData1.location}',
-                              'description': '${acknowledgedData1.description}',
-                              'postId': '${acknowledgedData1.postId}',
-                              'name': '${acknowledgedData1.name}',
-                              'ownerId': '${acknowledgedData1.ownerId}',
-                              'mediaUrl': '${acknowledgedData1.mediaUrl}',
-                              'isPrivate': acknowledgedData1.isPrivate,
-                              'consequences': acknowledgedData1.consequences,
-                              'timestamp': '${acknowledgedData1.timestamp}',
-                              'likes': acknowledgedData1.likes,
-                              'gpocname': myController.text,
-                              'gpoccontact': myController1.text
-                            });
+                                .document(acknowledgedData1['postId'])
+                                .setData(acknowledgedData1);
                             _fireStore
                                 .collection('notAck')
-                                .document('${acknowledgedData1.postId}')
+                                .document(acknowledgedData1['postId'])
                                 .delete();
                             _fireStore
                                 .collection('posts')
-                                .document('${acknowledgedData1.ownerId}')
+                                .document(acknowledgedData1['ownerId'])
                                 .collection('userPosts')
-                                .document('${acknowledgedData1.postId}')
-                                .updateData({
-                              'status': 'ack',
-                              'gpocname': myController.text,
-                              'gpoccontact': myController1.text
-                            });
-                            Navigator.pop(context);
-                            setState(() {});
+                                .document(acknowledgedData1['postId'])
+                                .setData(acknowledgedData1);
                             myController1.clear();
                             myController.clear();
+                            Navigator.pop(context);
+                            setState(() {});
                           },
                           color: Colors.yellow,
                           child: Text('close'),
@@ -393,6 +303,7 @@ class _DragTryState extends State<DragTry> {
                     ),
                     barrierDismissible: false,
                   );
+                  //setState(() {});
                 }
               },
             ),
@@ -418,11 +329,11 @@ class _DragTryState extends State<DragTry> {
                             showDialog(
                               context: context,
                               child: AlertDialog(
-                                title: Text('${completed[index].description}'),
+                                title: Text('${completed[index]['description']}'),
                                 content: Wrap(
                                   direction: Axis.vertical,
                                   children: <Widget>[
-                                    Text('${completed[index].location}'),
+                                    Text('${completed[index]['location']}'),
                                   ],
                                 ),
                                 actions: <Widget>[
@@ -440,7 +351,7 @@ class _DragTryState extends State<DragTry> {
                           }
                         },
                         child: ListTile(
-                          title: Text('${completed[index]. name}'),
+                          title: Text('${completed[index]['name']}'),
                         ),
                         padding: EdgeInsets.all(10.0),
                       ),
@@ -456,38 +367,21 @@ class _DragTryState extends State<DragTry> {
                   completed.add(acknowledgedData2);
                   acknowledged.remove(acknowledgedData2);
                 }
-                setState(() {});
+                acknowledgedData2['status'] = 'done';
                 _fireStore
                     .collection('completed')
-                    .document('${acknowledgedData2.postId}')
-                    .setData({
-                  'status': 'done',
-                  'username': '${acknowledgedData2.username}',
-                  'location': '${acknowledgedData2.location}',
-                  'description': '${acknowledgedData2.description}',
-                  'postId': '${acknowledgedData2.postId}',
-                  'name': '${acknowledgedData2.name}',
-                  'ownerId': '${acknowledgedData2.ownerId}',
-                  'mediaUrl': '${acknowledgedData2.mediaUrl}',
-                  'isPrivate': acknowledgedData2.isPrivate,
-                  'consequences': acknowledgedData2.consequences,
-                  'timestamp': '${acknowledgedData2.timestamp}',
-                  'likes': acknowledgedData2.likes,
-                  'gpocname': '${acknowledgedData2.gpocName}',
-                  'gpoccontact': '${acknowledgedData2.gpocContact}'
-                });
+                    .document(acknowledgedData2['postId'])
+                    .setData(acknowledgedData2);
                 _fireStore
                     .collection('ack')
-                    .document('${acknowledgedData2.postId}')
+                    .document(acknowledgedData2['postId'])
                     .delete();
                 _fireStore
                     .collection('posts')
-                    .document('${acknowledgedData2.ownerId}')
+                    .document(acknowledgedData2['ownerId'])
                     .collection('userPosts')
-                    .document('${acknowledgedData2.postId}')
-                    .updateData({
-                  'status': 'done',
-                });
+                    .document(acknowledgedData2['postId'])
+                    .setData(acknowledgedData2);
                 setState(() {});
               },
             ),
