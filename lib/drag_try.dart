@@ -41,6 +41,7 @@ class _DragTryState extends State<DragTry> {
   final List notAcknowledged = [];
   final List acknowledged = [];
   final List completed = [];
+  final List<Widget> consequences = [];
   Map<String, dynamic> acknowledgedData1;
   Map<String, dynamic> acknowledgedData2;
   String dragStatus;
@@ -54,6 +55,7 @@ class _DragTryState extends State<DragTry> {
         backgroundColor: Colors.black,
       ),
       body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
@@ -73,6 +75,9 @@ class _DragTryState extends State<DragTry> {
                   child: Padding(
                     child: RaisedButton(
                       onPressed: () {
+                        for(var i in notAcknowledged[index]['consequences']){
+                          consequences.add(Text('$i'));
+                        }
                         showDialog(
                           context: context,
                           child: AlertDialog(
@@ -93,12 +98,16 @@ class _DragTryState extends State<DragTry> {
                                         ),
                                         SingleChildScrollView(
                                           child: Container(
-                                              width: MediaQuery.of(context).size.width * 0.5,
-                                              child: Text(
-                                                notAcknowledged[index]['description'],
-                                                maxLines: 10,
-                                              ),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.5,
+                                            child: Text(
+                                              notAcknowledged[index]
+                                                  ['description'],
+                                              maxLines: 10,
                                             ),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -120,6 +129,13 @@ class _DragTryState extends State<DragTry> {
                                       ],
                                     ),
                                     padding: EdgeInsets.all(5.0),
+                                  ),
+                                ),
+                                Card(
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    child: ListView(children: consequences),
                                   ),
                                 ),
                               ],
@@ -430,4 +446,3 @@ class _DragTryState extends State<DragTry> {
     );
   }
 }
-
