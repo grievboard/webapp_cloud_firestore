@@ -1,7 +1,8 @@
-import 'drag_try.dart';
+import '../drag_try.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
   static String id = '/login_screen';
@@ -11,13 +12,31 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   @override
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
   final _auth = FirebaseAuth.instance;
+  final _fireStore = Firestore.instance;
+  List<String>  idData= [];
   bool showSpinner = false;
-  String email, password;
+  String email, password, id;
   var eController = TextEditingController();
   var pController = TextEditingController();
+  var iController = TextEditingController();
+
+  void getData() async {
+    var startData = await _fireStore.collection('admins').getDocuments();
+    var midData = startData.documents;
+    for (var x in midData) {
+      idData.add(x.data['Teacher ID']);
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +55,24 @@ class _LoginState extends State<Login> {
         ),
         onChanged: (value) {
           email = value;
+        },
+      ),
+    );
+    final idField = Container(
+      width: 550,
+      child: TextField(
+        controller: iController,
+        obscureText: false,
+        style: style,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Admin ID",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+          ),
+        ),
+        onChanged: (value) {
+          id = value;
         },
       ),
     );
@@ -72,17 +109,31 @@ class _LoginState extends State<Login> {
             });
             try {
               final user = await _auth.signInWithEmailAndPassword(
-                  email: email, password: password);
+                  email: email, password: password
+              );
               if (user != null) {
                 Navigator.pushNamed(context, DragTry.id);
+                if(!idData.contains(id)){
+                  _fireStore.collection('admins').add({
+                    'Teacher ID': id,
+                    'Email': email,
+                    'Password': password
+                  });
+                }
               }
               setState(() {
                 showSpinner = false;
                 eController.clear();
                 pController.clear();
+                iController.clear();
               });
             } catch (e) {
-              print(e);
+              showSpinner = false;
+//              AlertDialog(
+//                title: Text('Wrong Password'),
+//                content: Text('$e')
+//              );
+            print(e);
             }
           },
           child: Text(
@@ -159,6 +210,8 @@ class _LoginState extends State<Login> {
 //                  )
 //                ),
                   SizedBox(height: 45.0),
+                  idField,
+                  SizedBox(height: 25.0),
                   emailField,
                   SizedBox(height: 25.0),
                   passwordField,
