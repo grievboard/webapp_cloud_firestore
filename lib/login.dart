@@ -1,6 +1,11 @@
+import 'drag_try.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class Login extends StatefulWidget {
+  static String id = '/login_screen';
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -8,32 +13,48 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+  final _auth = FirebaseAuth.instance;
+  bool showSpinner = false;
+  String email, password;
+  var eController = TextEditingController();
+  var pController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-
     final emailField = Container(
       width: 550,
       child: TextField(
+        controller: eController,
         obscureText: false,
         style: style,
         decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Email",
-            border:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Email",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+          ),
+        ),
+        onChanged: (value) {
+          email = value;
+        },
       ),
     );
     final passwordField = Container(
       width: 550.0,
       child: TextField(
+        controller: pController,
         obscureText: true,
         style: style,
         decoration: InputDecoration(
-            contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-            hintText: "Password",
-            border:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Password",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(32.0),
+          ),
+        ),
+        onChanged: (value) {
+          password = value;
+        },
       ),
     );
     final loginButon = Container(
@@ -45,84 +66,111 @@ class _LoginState extends State<Login> {
         child: MaterialButton(
           minWidth: MediaQuery.of(context).size.width,
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          onPressed: () {},
-          child: Text("Login",
-              textAlign: TextAlign.center,
-              style: style.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
+          onPressed: () async {
+            setState(() {
+              showSpinner = true;
+            });
+            try {
+              final user = await _auth.signInWithEmailAndPassword(
+                  email: email, password: password);
+              if (user != null) {
+                Navigator.pushNamed(context, DragTry.id);
+              }
+              setState(() {
+                showSpinner = false;
+                eController.clear();
+                pController.clear();
+              });
+            } catch (e) {
+              print(e);
+            }
+          },
+          child: Text(
+            "Login",
+            textAlign: TextAlign.center,
+            style: style.copyWith(
+                color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF030423),
-        title: Text('GrievBoard'),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: Center(
-              child: FlatButton(
-                color: Color(0xFF030423),
-                onPressed: (){},
-                child: Text('Home'),
-                textColor: Colors.white,
+    return ModalProgressHUD(
+      inAsyncCall: showSpinner,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFF030423),
+          title: Text('GrievBoard'),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Center(
+                child: FlatButton(
+                  color: Color(0xFF030423),
+                  onPressed: () {},
+                  child: Text('Home'),
+                  textColor: Colors.white,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: Center(
-              child: FlatButton(
-                color: Color(0xFF030423),
-                onPressed: (){},
-                child: Text('About'),
-                textColor: Colors.white,
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Center(
+                child: FlatButton(
+                  color: Color(0xFF030423),
+                  onPressed: () {},
+                  child: Text('About'),
+                  textColor: Colors.white,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: Center(
-              child: FlatButton(
-                color: Color(0xFF030423),
-                onPressed: (){},
-                child: Text('Login'),
-                textColor: Colors.white,
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Center(
+                child: FlatButton(
+                  color: Color(0xFF030423),
+                  onPressed: () {},
+                  child: Text('Login'),
+                  textColor: Colors.white,
+                ),
               ),
-            ),
-          )
-        ],
-      ),
-      body: Center(
-        child: Container(
-          color: Color(0xFFFAFAFA),
-          child: Padding(
-            padding: const EdgeInsets.all(36.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 155.0,
-                  child: Image.asset(
-                    "images/GB.jpeg",
-                    fit: BoxFit.contain,
+            )
+          ],
+        ),
+        body: Center(
+          child: Container(
+            color: Color(0xFFFAFAFA),
+            child: Padding(
+              padding: const EdgeInsets.all(36.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+//                Container(
+//                  height: 155.0,
+//                  decoration: BoxDecoration(
+//                    image: DecorationImage(
+//                      image: FileImage(
+//                       height: 50.0,
+//                        width: 50.0,
+//                        fit: BoxFit.contain,
+//                      ),
+//                    )
+//                  )
+//                ),
+                  SizedBox(height: 45.0),
+                  emailField,
+                  SizedBox(height: 25.0),
+                  passwordField,
+                  SizedBox(
+                    height: 35.0,
                   ),
-                ),
-                SizedBox(height: 45.0),
-                emailField,
-                SizedBox(height: 25.0),
-                passwordField,
-                SizedBox(
-                  height: 35.0,
-                ),
-                loginButon,
-                SizedBox(
-                  height: 15.0,
-                ),
-              ],
+                  loginButon,
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

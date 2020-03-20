@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'dart:convert';
-//import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DragTry extends StatefulWidget {
+
+  static String id = '/drag_try_screen';
+
   @override
   createState() => _DragTryState();
 }
@@ -38,6 +40,7 @@ class _DragTryState extends State<DragTry> {
   final myController = TextEditingController();
   final myController1 = TextEditingController();
   var _fireStore = Firestore.instance;
+  final _auth = FirebaseAuth.instance;
   final List notAcknowledged = [];
   final List acknowledged = [];
   final List completed = [];
@@ -51,6 +54,16 @@ class _DragTryState extends State<DragTry> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: FlatButton(
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: (){
+            _auth.signOut();
+            Navigator.pop(context);
+          },
+        ),
         title: Text("Draggable"),
         backgroundColor: Colors.black,
       ),

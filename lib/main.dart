@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'drag_try.dart';
 import 'login.dart';
+import 'drag_try.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,10 +9,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        home: Scaffold(
-          body: DragTry(),
-        ));
+      initialRoute: Login.id,
+      routes: {
+        Login.id: (context) => Login(),
+        DragTry.id: (context) => DragTry()
+      },
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+    );
   }
 }
