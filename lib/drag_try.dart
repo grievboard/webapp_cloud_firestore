@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'problem_card.dart';
+
 
 class DragTry extends StatefulWidget {
 
@@ -86,99 +88,7 @@ class _DragTryState extends State<DragTry> {
               itemBuilder: (context, index) {
                 return Draggable(
                   child: Padding(
-                    child: RaisedButton(
-                      onPressed: () {
-                        for(var i in notAcknowledged[index]['consequences']){
-                          consequences.add(Text('$i'));
-                        }
-                        showDialog(
-                          context: context,
-                          child: AlertDialog(
-                            title: Text(notAcknowledged[index]['name']),
-                            content: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Card(
-                                  color: Color(0xFFFBFBFB),
-                                  child: Padding(
-                                    child: Wrap(
-                                      direction: Axis.vertical,
-                                      children: <Widget>[
-                                        Text("Description"),
-                                        SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        SingleChildScrollView(
-                                          child: Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.5,
-                                            child: Text(
-                                              notAcknowledged[index]
-                                                  ['description'],
-                                              maxLines: 10,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    padding: EdgeInsets.all(5.0),
-                                  ),
-                                ),
-                                Card(
-                                  color: Color(0xFFFBFBFB),
-                                  child: Padding(
-                                    child: Wrap(
-                                      direction: Axis.vertical,
-                                      children: <Widget>[
-                                        Text("Likes"),
-                                        SizedBox(
-                                          height: 10.0,
-                                        ),
-                                        Text(
-                                            '${notAcknowledged[index]['likes'].length}'),
-                                      ],
-                                    ),
-                                    padding: EdgeInsets.all(5.0),
-                                  ),
-                                ),
-                                Card(
-                                  child: Container(
-                                    height: 40,
-                                    width: 40,
-                                    child: ListView(children: consequences),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            actions: <Widget>[
-                              RaisedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                color: Color(0xFF030423),
-                                textColor: Colors.white,
-                                child: Text('Close'),
-                              )
-                            ],
-                          ),
-                          barrierDismissible: false,
-                        );
-                      },
-                      color: Colors.white,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: ListTile(
-                          leading: Icon(Icons.fiber_manual_record,
-                              color: Colors.red),
-                          title: Text('${notAcknowledged[index]['name']}'),
-                        ),
-                      ),
-                    ),
+                    child: ProblemCard(notAcknowledged, index),
                     padding: EdgeInsets.all(20.0),
                   ),
                   feedback: Material(
@@ -218,73 +128,7 @@ class _DragTryState extends State<DragTry> {
                     return Draggable(
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
-                        child: RaisedButton(
-                          color: Colors.white,
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              child: AlertDialog(
-                                title:
-                                    Text('${acknowledged[index]['username']}'),
-                                content: Wrap(
-                                  direction: Axis.vertical,
-                                  children: <Widget>[
-                                    Card(
-                                      color: Color(0xFFFBFBFB),
-                                      child: Padding(
-                                        child: Wrap(
-                                          direction: Axis.vertical,
-                                          children: <Widget>[
-                                            Text("Description"),
-                                            SizedBox(
-                                              height: 10.0,
-                                            ),
-                                            Text(
-                                                '${acknowledged[index]['description']}'),
-                                          ],
-                                        ),
-                                        padding: EdgeInsets.all(5.0),
-                                      ),
-                                    ),
-                                    Card(
-                                      color: Color(0xFFFBFBFB),
-                                      child: Padding(
-                                        child: Wrap(
-                                          direction: Axis.vertical,
-                                          children: <Widget>[
-                                            Text("Location"),
-                                            SizedBox(
-                                              height: 10.0,
-                                            ),
-                                            Text(
-                                                '${acknowledged[index]['location']}'),
-                                          ],
-                                        ),
-                                        padding: EdgeInsets.all(5.0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                actions: <Widget>[
-                                  RaisedButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    color: Color(0xFF030423),
-                                    textColor: Colors.white,
-                                    child: Text('Close'),
-                                  )
-                                ],
-                              ),
-                              barrierDismissible: false,
-                            );
-                          },
-                          child: ListTile(
-                            title: Text('${acknowledged[index]['name']}'),
-                            leading: Icon(Icons.fiber_manual_record,
-                                color: Colors.deepOrangeAccent),
-                          ),
-                        ),
+                        child: ProblemCard(acknowledged, index)
                       ),
                       feedback: Material(
                         elevation: 5.0,

@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: Login.id,
+      initialRoute: DragTry.id,
       routes: {
         Login.id: (context) => Login(),
         DragTry.id: (context) => DragTry()
