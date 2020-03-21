@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ProblemCard extends StatelessWidget {
   final status, index;
-  var consequences;
+  List<Widget> consequences;
   int count = 1;
   ProblemCard(this.status, this.index);
 
@@ -14,7 +14,15 @@ class ProblemCard extends StatelessWidget {
       onPressed: () {
         consequences = [];
         for (var i in status[index]['consequences']) {
-          consequences.add(i);
+          consequences.add(Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              '$count ' + i,
+              maxLines: null,
+              textAlign: TextAlign.left,
+            ),
+          ));
+          count ++;
         }
         showGeneralDialog(
             context: context,
@@ -27,89 +35,80 @@ class ProblemCard extends StatelessWidget {
                   opacity: a1.value,
                   child: AlertDialog(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0)),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
                     title: Text(status[index]['name']),
-                    content: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Card(
-                          color: Color(0xFFFBFBFB),
-                          child: Padding(
-                            child: Padding(
-                              padding: EdgeInsets.all(15.0),
-                              child: Wrap(
-                                direction: Axis.vertical,
-                                children: <Widget>[
-                                  Text(
-                                    "Description",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.all(15),
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.5,
-                                    child: Text(
-                                      status[index]['description'],
-                                      maxLines: 10,
-                                    ),
-                                  ),
-                                ],
+                    content: Container(
+                      height: 500,
+                      width: 700,
+                      child: DataTable(
+                        dataRowHeight: 100,
+                        columns: [
+                          DataColumn(label: Text('')),
+                          DataColumn(label: Text(''))
+                        ],
+                        rows: [
+                          DataRow(cells: [
+                            DataCell(
+                              Text(
+                                'Description',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
-                            padding: EdgeInsets.all(5.0),
-                          ),
-                        ),
-                        Card(
-                          color: Color(0xFFFBFBFB),
-                          child: Padding(
-                            child: Wrap(
-                              direction: Axis.vertical,
-                              children: <Widget>[
-                                Text("Likes"),
-                                SizedBox(
-                                  height: 10.0,
+                            DataCell(
+                              SingleChildScrollView(
+                                child: Text(
+                                  status[index]['description'],
+                                  maxLines: null,
                                 ),
-                                Text(
-                                    '${status[index]['likes'].length}'),
-                              ],
+                              ),
+                            )
+                          ]),
+                          DataRow(cells: [
+                            DataCell(
+                              Text(
+                                'Likes',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
-                            padding: EdgeInsets.all(5.0),
-                          ),
-                        ),
-                        Card(
-                          child: Container(
-                            margin: EdgeInsets.all(20.0),
-                            height: 100.0, //consequences.length  * 70,
-                            width: 500.0,
-                            child: ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: consequences.length,
-                              itemBuilder: (context, index) {
-                                if (index == 0 && count == 1) {
-                                  index = 0;
-                                  count = 0;
-                                  return Text('Consequences',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold
+                            DataCell(
+                              SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 15.0,
                                   ),
-                                  );
-                                }
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '${index+1} '+' ${consequences[index]}',
-                                    maxLines: null,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                );
-                              },
+                                  overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0)
+                                ),
+                                child: Slider(
+                                  min: 0,
+                                  max: 100,
+                                  value: status[index]['likes'].length * 10,
+                                  onChanged: (val){},
+                                ),
+                              )
+                            )
+                          ]),
+                          DataRow(cells: [
+                            DataCell(
+                              Text(
+                                'Consequences',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
+                            DataCell(
+                              Container(
+                                height: 100.0,
+                                width: 500.0,
+                                child: ListView(
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  children: consequences,
+                                )
+                              ),
+                            )
+                          ]),
+                        ],
+                      ),
                     ),
                     actions: <Widget>[
                       RaisedButton(
