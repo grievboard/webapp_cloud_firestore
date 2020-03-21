@@ -172,8 +172,7 @@ class _DragTryState extends State<DragTry> {
                         RaisedButton(
                           onPressed: () async {
                             acknowledgedData1['gpocname'] = myController.text;
-                            acknowledgedData1['gpoccontact'] =
-                                myController1.text;
+                            acknowledgedData1['gpoccontact'] = myController1.text;
                             acknowledgedData1['status'] = 'ack';
                             _fireStore
                                 .collection('ack')
@@ -205,7 +204,7 @@ class _DragTryState extends State<DragTry> {
                     ),
                     barrierDismissible: false,
                   );
-                  //setState(() {});
+                  setState(() {});
                 }
               },
             ),

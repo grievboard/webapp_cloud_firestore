@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class ProblemCard extends StatelessWidget {
   final status, index;
   var consequences;
+  int count = 1;
   ProblemCard(this.status, this.index);
 
   @override
@@ -87,8 +88,9 @@ class ProblemCard extends StatelessWidget {
                               shrinkWrap: true,
                               itemCount: consequences.length,
                               itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  // return the header
+                                if (index == 0 && count == 1) {
+                                  index = 0;
+                                  count = 0;
                                   return Text('Consequences',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold
