@@ -74,11 +74,17 @@ class _DragTryState extends State<DragTry> {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-              color: Color(0xFF030423),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40),
+                bottomLeft: Radius.circular(40),
+              ),
+              gradient: RadialGradient(
+                colors: [Color(0xFF3E0108), Color(0xFFA70000)]
+              )
             ),
             margin: EdgeInsets.fromLTRB(70.0, 110.0, 70.0, 110.0),
-            height: 500.0,
+            height: 510.0,
             width: 292.0,
             child: ListView.builder(
               scrollDirection: Axis.vertical,
@@ -87,7 +93,7 @@ class _DragTryState extends State<DragTry> {
               itemBuilder: (context, index) {
                 return Draggable(
                   child: Padding(
-                    child: ProblemCard(notAcknowledged, index),
+                    child: ProblemCard(notAcknowledged, index, Color(0xFF3E0108)),
                     padding: EdgeInsets.all(20.0),
                   ),
                   feedback: Material(
@@ -111,12 +117,17 @@ class _DragTryState extends State<DragTry> {
           ),
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
-              color: Color(0xFF030423),
+              gradient: RadialGradient(
+                colors: [Color(0xFfff9966), Color(0xFFff5e62)]
+              ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40),
+              ),
             ),
             margin: EdgeInsets.fromLTRB(70.0, 110.0, 70.0, 110.0),
             width: 292.0,
-            height: 500.0,
+            height: 510.0,
             child: DragTarget(
               builder: (context, candidateData, rejectedData) {
                 return ListView.builder(
@@ -127,7 +138,7 @@ class _DragTryState extends State<DragTry> {
                     return Draggable(
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
-                        child: ProblemCard(acknowledged, index)
+                        child: ProblemCard(acknowledged, index, Color(0xFfff9966))
                       ),
                       feedback: Material(
                         elevation: 5.0,
@@ -217,12 +228,19 @@ class _DragTryState extends State<DragTry> {
           ),
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25.0),
+              gradient: RadialGradient(
+                  colors: [Color(0xFF02aab0), Colors.green]
+              ),
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(40),
+                topLeft: Radius.circular(40),
+                topRight: Radius.circular(40),
+              ),
               color: Color(0xFF030423),
             ),
             margin: EdgeInsets.fromLTRB(70.0, 110.0, 70.0, 110.0),
             width: 292.0,
-            height: 500.0,
+            height: 510.0,
             child: DragTarget(
               builder: (context, candidateData, rejectedData) {
                 return ListView.builder(
@@ -232,46 +250,7 @@ class _DragTryState extends State<DragTry> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: EdgeInsets.all(10),
-                      child: Container(
-                        margin: EdgeInsets.all(10.0),
-                        child: RaisedButton(
-                          color: Colors.white,
-                          onPressed: () {
-                            {
-                              showDialog(
-                                context: context,
-                                child: AlertDialog(
-                                  title: Text(
-                                      '${completed[index]['description']}'),
-                                  content: Wrap(
-                                    direction: Axis.vertical,
-                                    children: <Widget>[
-                                      Text('${completed[index]['location']}'),
-                                    ],
-                                  ),
-                                  actions: <Widget>[
-                                    RaisedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      color: Colors.yellow,
-                                      child: Text('Close'),
-                                    )
-                                  ],
-                                ),
-                                barrierDismissible: false,
-                              );
-                            }
-                          },
-                          child: ListTile(
-                            title: Text('${completed[index]['name']}'),
-                            leading: Icon(
-                              Icons.fiber_manual_record,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ),
-                      ),
+                      child: ProblemCard(completed, index, Colors.green)
                     );
                   },
                 );

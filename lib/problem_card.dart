@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class ProblemCard extends StatelessWidget {
-  final status, index;
+  final status, index, color;
   List<Widget> consequences;
   int count = 1;
-  ProblemCard(this.status, this.index);
+  ProblemCard(this.status, this.index, this.color);
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +21,9 @@ class ProblemCard extends StatelessWidget {
               '$count ' + i,
               maxLines: null,
               textAlign: TextAlign.left,
+              style: TextStyle(
+                fontSize: 14
+              ),
             ),
           ));
           count++;
@@ -38,7 +41,14 @@ class ProblemCard extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      title: Text(status[index]['name']),
+                      title: Padding(
+                        padding: const EdgeInsets.only(left: 50.0, top: 30.0),
+                        child: Text(
+                          status[index]['name'],
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 50.0),
+                        ),
+                      ),
                       content: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -64,6 +74,7 @@ class ProblemCard extends StatelessWidget {
                                     SingleChildScrollView(
                                       child: Text(
                                         status[index]['description'],
+                                        style: TextStyle(fontSize: 14),
                                         maxLines: null,
                                       ),
                                     ),
@@ -80,7 +91,7 @@ class ProblemCard extends StatelessWidget {
                                   DataCell(SliderTheme(
                                     data: SliderTheme.of(context).copyWith(
                                         thumbShape: RoundSliderThumbShape(
-                                          enabledThumbRadius: 5.0,
+                                          enabledThumbRadius: 2.5,
                                         ),
                                         overlayShape: RoundSliderOverlayShape(
                                             overlayRadius: 0.0)),
@@ -147,8 +158,10 @@ class ProblemCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
         ),
         child: ListTile(
-          leading: Icon(Icons.fiber_manual_record, color: Colors.red),
-          title: Text('${status[index]['name']}'),
+          leading: Icon(Icons.fiber_manual_record, color: color),
+          title: Text('${status[index]['name']}',
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ),
     );
