@@ -100,7 +100,7 @@ class ProblemCard extends StatelessWidget {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    '$index '+' ${consequences[index]}',
+                                    '${index+1} '+' ${consequences[index]}',
                                     maxLines: null,
                                     textAlign: TextAlign.left,
                                   ),
