@@ -129,11 +129,12 @@ class _LoginState extends State<Login> {
               });
             } catch (e) {
               showSpinner = false;
-//              AlertDialog(
-//                title: Text('Wrong Password'),
-//                content: Text('$e')
-//              );
-            print(e);
+//              showDialog(context){
+//                AlertDialog(
+//                    title: Text(e),
+//                    content: Text('$e')
+//                );
+//              }
             }
           },
           child: Text(

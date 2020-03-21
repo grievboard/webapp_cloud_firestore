@@ -65,7 +65,7 @@ class _DragTryState extends State<DragTry> {
             Navigator.pop(context);
           },
         ),
-        title: Text("Draggable"),
+        title: Text("GrievBoard"),
         backgroundColor: Colors.black,
       ),
       body: Row(
@@ -157,12 +157,19 @@ class _DragTryState extends State<DragTry> {
                       content: Wrap(
                         children: <Widget>[
                           TextField(
-                            decoration: InputDecoration(labelText: 'GPOC Name'),
-                            controller: myController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,//this has no effect
+                                ),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              hintText: "GPOC Name",
+                            ),
+                            controller: myController
                           ),
                           TextField(
-                            decoration:
-                                InputDecoration(labelText: 'GPOC Number'),
+                            decoration: InputDecoration(labelText: 'GPOC Number'),
                             controller: myController1,
                           ),
                         ],

@@ -12,6 +12,7 @@ class ProblemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return RaisedButton(
       onPressed: () {
+        count = 1;
         consequences = [];
         for (var i in status[index]['consequences']) {
           consequences.add(Padding(
@@ -22,7 +23,7 @@ class ProblemCard extends StatelessWidget {
               textAlign: TextAlign.left,
             ),
           ));
-          count ++;
+          count++;
         }
         showGeneralDialog(
             context: context,
@@ -34,93 +35,104 @@ class ProblemCard extends StatelessWidget {
                 child: Opacity(
                   opacity: a1.value,
                   child: AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    title: Text(status[index]['name']),
-                    content: Container(
-                      height: 500,
-                      width: 700,
-                      child: DataTable(
-                        dataRowHeight: 100,
-                        columns: [
-                          DataColumn(label: Text('')),
-                          DataColumn(label: Text(''))
-                        ],
-                        rows: [
-                          DataRow(cells: [
-                            DataCell(
-                              Text(
-                                'Description',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            DataCell(
-                              SingleChildScrollView(
-                                child: Text(
-                                  status[index]['description'],
-                                  maxLines: null,
-                                ),
-                              ),
-                            )
-                          ]),
-                          DataRow(cells: [
-                            DataCell(
-                              Text(
-                                'Likes',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            DataCell(
-                              SliderTheme(
-                                data: SliderTheme.of(context).copyWith(
-                                  thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 15.0,
-                                  ),
-                                  overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0)
-                                ),
-                                child: Slider(
-                                  min: 0,
-                                  max: 100,
-                                  value: status[index]['likes'].length * 10,
-                                  onChanged: (val){},
-                                ),
-                              )
-                            )
-                          ]),
-                          DataRow(cells: [
-                            DataCell(
-                              Text(
-                                'Consequences',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            DataCell(
-                              Container(
-                                height: 100.0,
-                                width: 500.0,
-                                child: ListView(
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  children: consequences,
-                                )
-                              ),
-                            )
-                          ]),
-                        ],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
-                    ),
-                    actions: <Widget>[
-                      RaisedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        color: Color(0xFF030423),
-                        textColor: Colors.white,
-                        child: Text('Close'),
-                      )
-                    ],
-                  ),
+                      title: Text(status[index]['name']),
+                      content: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Container(
+                            height: 500,
+                            width: 700,
+                            child: DataTable(
+                              dataRowHeight: 100,
+                              columns: [
+                                DataColumn(label: Text('')),
+                                DataColumn(label: Text(''))
+                              ],
+                              rows: [
+                                DataRow(cells: [
+                                  DataCell(
+                                    Text(
+                                      'Description',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    SingleChildScrollView(
+                                      child: Text(
+                                        status[index]['description'],
+                                        maxLines: null,
+                                      ),
+                                    ),
+                                  )
+                                ]),
+                                DataRow(cells: [
+                                  DataCell(
+                                    Text(
+                                      'Likes',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  DataCell(SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                        thumbShape: RoundSliderThumbShape(
+                                          enabledThumbRadius: 5.0,
+                                        ),
+                                        overlayShape: RoundSliderOverlayShape(
+                                            overlayRadius: 0.0)),
+                                    child: Slider(
+                                      min: 0,
+                                      max: 100,
+                                      value: status[index]['likes'].length * 10,
+                                      onChanged: (val) {},
+                                    ),
+                                  ))
+                                ]),
+                                DataRow(cells: [
+                                  DataCell(
+                                    Text(
+                                      'Consequences',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Container(
+                                        height: 100.0,
+                                        width: 500.0,
+                                        child: ListView(
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          children: consequences,
+                                        )),
+                                  )
+                                ]),
+                              ],
+                            ),
+                          ),
+                          RaisedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                bottomRight: Radius.circular(20),
+                              ),
+                            ),
+                            color: Color(0xFF030423),
+                            textColor: Colors.white,
+                            child: Center(
+                              widthFactor: 50.0,
+                              child: Text('Close'),
+                            ),
+                          )
+                        ],
+                      )),
                 ),
               );
             },
