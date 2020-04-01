@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:js' as js;
 
 // ignore: must_be_immutable
 class ProblemCard extends StatelessWidget {
 
-  final status, index, color;
-  List<Widget> consequences;
+  final status, index, color, commentData;
+  List<Widget> consequences, comments;
   int count = 1;
-  ProblemCard(this.status, this.index, this.color);
+  ProblemCard(this.status, this.index, this.color, this.commentData);
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +15,25 @@ class ProblemCard extends StatelessWidget {
       onPressed: () {
         count = 1;
         consequences = [];
+        comments = [];
         for (var i in status[index]['consequences']) {
           consequences.add(Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
               '$count ' + i,
+              maxLines: null,
+              textAlign: TextAlign.left,
+              style: TextStyle(fontSize: 14),
+            ),
+          ));
+          count++;
+        }
+        var midData = commentData.documents;
+        for (var i in midData.data) {
+          consequences.add(Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              '$count ' + i.data['comment'],
               maxLines: null,
               textAlign: TextAlign.left,
               style: TextStyle(fontSize: 14),
@@ -45,6 +58,7 @@ class ProblemCard extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 50.0, top: 30.0),
                         child: Text(
                           status[index]['name'],
+                          maxLines: 3,
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 50.0),
                         ),
@@ -129,7 +143,7 @@ class ProblemCard extends StatelessWidget {
                                             scrollDirection: Axis.vertical,
                                             shrinkWrap: true,
                                             children: consequences,
-                                          )),
+                                          ),),
                                     )
                                   ]),
                                   DataRow(cells: [

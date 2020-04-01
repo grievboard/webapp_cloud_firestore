@@ -4,7 +4,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.5.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -14,9 +14,19 @@ dependencies:
   cloud_firestore: ^0.13.4+2
   firebase_auth: ^0.15.5+2
   modal_progress_hud: ^0.1.3
+  line_icons: ^0.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 flutter:
   uses-material-design: true
+  assets:
+    - images/
+  fonts:
+    - family: IbarraRealNova
+      fonts:
+        - asset: fonts/Ibarra_Real_Nova/IbarraRealNova-Regular.ttf
+    - family: Deligne
+      fonts:
+        - asset: fonts/OPTIDeligne-Normal.otf

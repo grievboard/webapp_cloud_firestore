@@ -46,6 +46,7 @@ class _DragTryState extends State<DragTry> {
   final List acknowledged = [];
   final List completed = [];
   final List<Widget> consequences = [];
+  DocumentSnapshot commentData;
   Map<String, dynamic> acknowledgedData1;
   Map<String, dynamic> acknowledgedData2;
   String dragStatus;
@@ -93,7 +94,7 @@ class _DragTryState extends State<DragTry> {
               itemBuilder: (context, index) {
                 return Draggable(
                   child: Padding(
-                    child: ProblemCard(notAcknowledged, index, Color(0xFF3E0108)),
+                    child: ProblemCard(notAcknowledged, index, Color(0xFF3E0108), _fireStore.collection('comments').document(notAcknowledged[index]['postId']).collection('comments').getDocuments()),
                     padding: EdgeInsets.all(20.0),
                   ),
                   feedback: Material(
@@ -138,7 +139,7 @@ class _DragTryState extends State<DragTry> {
                     return Draggable(
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
-                        child: ProblemCard(acknowledged, index, Color(0xFfff9966))
+                        child: ProblemCard(acknowledged, index, Color(0xFfff9966), acknowledged[index]['postId'])
                       ),
                       feedback: Material(
                         elevation: 5.0,
@@ -250,7 +251,7 @@ class _DragTryState extends State<DragTry> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: EdgeInsets.all(10),
-                      child: ProblemCard(completed, index, Colors.green)
+                      child: ProblemCard(completed, index, Colors.green, completed[index]['postId'])
                     );
                   },
                 );
