@@ -2,9 +2,10 @@ import 'dart:math' show pi;
 import 'package:flutter/material.dart';
 import 'entrance_fader.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:webapp1/drag_try.dart';
 
 class IntroPage extends StatelessWidget {
-  static String id = '/home_sccreen';
+  static String id = '/home_screen';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -90,7 +91,35 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          Header(),
+          Padding(
+            padding: const EdgeInsets.all(64),
+            child: FlatButton(
+              onPressed: () {
+                print('not moving');
+                Navigator.pushNamed(context, DragTry.id);
+              },
+              color: Colors.transparent,
+              child: Text(
+                'Login',
+                style: TextStyle(fontFamily: 'Deligne', fontSize: 30),
+              ),
+            ),
+//            child: Row(
+//              children: <Widget>[
+//                //Text('GOTOEGYPT'),
+//                Spacer(),
+//                //if (MediaQuery.of(context).size.width > 900) ...[
+//
+//                SizedBox(width: 64),
+//                //],
+//                Icon(
+//                  Icons.apps,
+//                  color: backgroundColor,
+//                  size: 32,
+//                ),
+//              ],
+//            ),
+          ),
           Positioned(
             top: screenHeight * 0.8 - 1 * offset,
             left: 0,
@@ -149,37 +178,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Header extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(64),
-      child: Row(
-        children: <Widget>[
-          //Text('GOTOEGYPT'),
-          Spacer(),
-          if (MediaQuery.of(context).size.width > 900) ...[
-            FlatButton(
-              color: Colors.transparent,
-              child: Text(
-                'Login',
-                style: TextStyle(fontFamily: 'Deligne', fontSize: 30),
-              ),
-              onPressed: () {},
-            ),
-            SizedBox(width: 64),
-          ],
-          Icon(
-            Icons.apps,
-            color: backgroundColor,
-            size: 32,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class MainText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -187,7 +185,7 @@ class MainText extends StatelessWidget {
       children: <Widget>[
         Text(
           'GrievBoard',
-          style: TextStyle(color: backgroundColor,fontSize: 50),
+          style: TextStyle(color: backgroundColor, fontSize: 50),
         ),
         SizedBox(height: 16),
         Container(

@@ -94,7 +94,7 @@ class _DragTryState extends State<DragTry> {
               itemBuilder: (context, index) {
                 return Draggable(
                   child: Padding(
-                    child: ProblemCard(notAcknowledged, index, Color(0xFF3E0108), _fireStore.collection('comments').document(notAcknowledged[index]['postId']).collection('comments').getDocuments()),
+                    child: ProblemCard(notAcknowledged, index, Color(0xFF3E0108)),
                     padding: EdgeInsets.all(20.0),
                   ),
                   feedback: Material(
@@ -139,7 +139,7 @@ class _DragTryState extends State<DragTry> {
                     return Draggable(
                       child: Padding(
                         padding: EdgeInsets.all(20.0),
-                        child: ProblemCard(acknowledged, index, Color(0xFfff9966), acknowledged[index]['postId'])
+                        child: ProblemCard(acknowledged, index, Color(0xFfff9966))
                       ),
                       feedback: Material(
                         elevation: 5.0,
@@ -251,7 +251,7 @@ class _DragTryState extends State<DragTry> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: EdgeInsets.all(10),
-                      child: ProblemCard(completed, index, Colors.green, completed[index]['postId'])
+                      child: ProblemCard(completed, index, Colors.green)
                     );
                   },
                 );

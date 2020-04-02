@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'comment_data.dart';
 
 // ignore: must_be_immutable
 class ProblemCard extends StatelessWidget {
-
-  final status, index, color, commentData;
+  final status, index, color;
   List<Widget> consequences, comments;
   int count = 1;
-  ProblemCard(this.status, this.index, this.color, this.commentData);
+  ProblemCard(this.status, this.index, this.color);
 
   @override
   Widget build(BuildContext context) {
@@ -17,28 +17,17 @@ class ProblemCard extends StatelessWidget {
         consequences = [];
         comments = [];
         for (var i in status[index]['consequences']) {
-          consequences.add(Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              '$count ' + i,
-              maxLines: null,
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 14),
+          consequences.add(
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                '$count ' + i,
+                maxLines: null,
+                textAlign: TextAlign.left,
+                style: TextStyle(fontSize: 14),
+              ),
             ),
-          ));
-          count++;
-        }
-        var midData = commentData.documents;
-        for (var i in midData.data) {
-          consequences.add(Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              '$count ' + i.data['comment'],
-              maxLines: null,
-              textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 14),
-            ),
-          ));
+          );
           count++;
         }
         showGeneralDialog(
@@ -137,13 +126,14 @@ class ProblemCard extends StatelessWidget {
                                     ),
                                     DataCell(
                                       Container(
-                                          height: 100.0,
-                                          width: 500.0,
-                                          child: ListView(
-                                            scrollDirection: Axis.vertical,
-                                            shrinkWrap: true,
-                                            children: consequences,
-                                          ),),
+                                        height: 100.0,
+                                        width: 500.0,
+                                        child: ListView(
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          children: consequences,
+                                        ),
+                                      ),
                                     )
                                   ]),
                                   DataRow(cells: [
@@ -163,11 +153,11 @@ class ProblemCard extends StatelessWidget {
                                             padding: const EdgeInsets.all(8.0),
                                             child: Material(
                                               child: InkWell(
-                                                //onTap: AlertDialog(),
-                                                child: Image(
-                                                  image: NetworkImage(status[index]['mediaUrl']),
-                                                )
-                                              ),
+                                                  //onTap: AlertDialog(),
+                                                  child: Image(
+                                                image: NetworkImage(
+                                                    status[index]['mediaUrl']),
+                                              )),
                                             ),
 //                                            child: Image(
 //                                                image: NetworkImage(
@@ -187,9 +177,10 @@ class ProblemCard extends StatelessWidget {
                                     ),
                                     DataCell(
                                       Container(
-                                        height: 100.0,
-                                        width: 500.0,
-                                      ),
+                                          height: 100.0,
+                                          width: 500.0,
+                                          child: CommentData(
+                                              postId: status[index]['postId'],),),
                                     )
                                   ]),
                                 ],
