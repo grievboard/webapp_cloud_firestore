@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -33,9 +34,12 @@ class CommentData extends StatelessWidget {
           }
         }
         return Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: commentData,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: commentData,
+            ),
           ),
         );
       }
